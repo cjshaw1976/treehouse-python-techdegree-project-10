@@ -1,12 +1,12 @@
 import datetime
 
-from flask import jsonify, Blueprint, abort
+from flask import Blueprint
 
 from flask_restful import (Resource, Api, reqparse,
-                               inputs, fields, marshal,
-                               marshal_with, url_for)
+                           fields, marshal,
+                           marshal_with, url_for)
 
-from auth import auth
+# from auth import auth
 import models
 
 todo_fields = {
@@ -17,6 +17,7 @@ todo_fields = {
     'created_at': fields.DateTime,
     'updated_at': fields.DateTime
 }
+
 
 class TodoList(Resource):
     def __init__(self):
@@ -45,9 +46,8 @@ class TodoList(Resource):
 
     def get(self):
         todos = [marshal(todo, todo_fields)
-                   for todo in models.Todo.select()]
+                 for todo in models.Todo.select()]
         return todos
-
 
     @marshal_with(todo_fields)
     # @auth.login_required
@@ -56,6 +56,7 @@ class TodoList(Resource):
         todo = models.Todo.create(**args)
         return (todo, 201, {
                 'Location': url_for('resources.todos.todo', id=todo.id)})
+
 
 class Todo(Resource):
     def __init__(self):
@@ -84,7 +85,7 @@ class Todo(Resource):
 
     @marshal_with(todo_fields)
     def get(self, id):
-        todo = models.Todo.get(models.Todo.id==id)
+        todo = models.Todo.get(models.Todo.id == id)
         return todo
 
     @marshal_with(todo_fields)
@@ -92,16 +93,17 @@ class Todo(Resource):
     def put(self, id):
         args = self.reqparse.parse_args()
         args['updated_at'] = datetime.datetime.now()
-        query = models.Todo.update(**args).where(models.Todo.id==id)
+        query = models.Todo.update(**args).where(models.Todo.id == id)
         query.execute()
-        return (models.Todo.get(models.Todo.id==id), 200,
+        return (models.Todo.get(models.Todo.id == id), 200,
                 {'Location': url_for('resources.todos.todo', id=id)})
 
     # @auth.login_required
     def delete(self, id):
-        query = models.Todo.delete().where(models.Todo.id==id)
+        query = models.Todo.delete().where(models.Todo.id == id)
         query.execute()
         return '', 204, {'Location': url_for('resources.todos.todos')}
+
 
 todos_api = Blueprint('resources.todos', __name__)
 api = Api(todos_api)

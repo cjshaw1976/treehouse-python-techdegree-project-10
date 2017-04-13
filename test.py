@@ -25,10 +25,10 @@ class TodoTests(unittest.TestCase):
     def test_create_user(self):
         """Create a test user and get token"""
         result = self.app.post('/api/v1/users',
-                                data ={"username": "fred",
-                                       "email": "fred@frog.com",
-                                       "password": "fred",
-                                       "verify_password": "fred"})
+                               data={"username": "fred",
+                                     "email": "fred@frog.com",
+                                     "password": "fred",
+                                     "verify_password": "fred"})
         self.assertEqual(result.status_code, 201)
 
         headers = {'Authorization': 'Basic ' + base64.b64encode(
@@ -41,10 +41,10 @@ class TodoTests(unittest.TestCase):
     def test_create_bad_user(self):
         """Create a bad users"""
         result = self.app.post('/api/v1/users',
-                                data ={"username": "fred",
-                                       "email": "fred@frog.com",
-                                       "password": "fred",
-                                       "verify_password": "derf"})
+                               data={"username": "fred",
+                                     "email": "fred@frog.com",
+                                     "password": "fred",
+                                     "verify_password": "derf"})
         self.assertEqual(result.status_code, 400)
 
     def test_item(self):
@@ -74,9 +74,10 @@ class TodoTests(unittest.TestCase):
                       result.headers['location'])
         query = Todo.get(name='Test Name Changed')
 
-        #Delete Item
+        # Delete Item
         result = self.app.delete('/api/v1/todos/{}'.format(query.id))
         self.assertEqual(result.status_code, 204)
+
 
 if __name__ == '__main__':
     unittest.main()

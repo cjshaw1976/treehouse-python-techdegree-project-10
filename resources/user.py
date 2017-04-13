@@ -1,10 +1,9 @@
 import json
 
-from flask import jsonify, Blueprint, abort, make_response, g
+from flask import Blueprint, make_response
 
 from flask_restful import (Resource, Api, reqparse,
-                               inputs, fields, marshal,
-                               marshal_with, url_for)
+                           fields, marshal)
 
 import models
 
@@ -51,7 +50,6 @@ class UserList(Resource):
             json.dumps({
                 'error': 'Password and password verification do not match'
             }), 400)
-
 
 
 users_api = Blueprint('resources.users', __name__)
